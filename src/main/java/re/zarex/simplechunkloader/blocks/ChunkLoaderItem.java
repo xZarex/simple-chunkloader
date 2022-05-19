@@ -3,10 +3,8 @@ package re.zarex.simplechunkloader.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.ChunkPos;
 import re.zarex.simplechunkloader.SimpleChunkLoader;
 
 public class ChunkLoaderItem extends BlockItem {
@@ -19,7 +17,7 @@ public class ChunkLoaderItem extends BlockItem {
         if (context.getWorld().isClient)
             return super.useOnBlock(context);
 
-        if (((ServerWorld)context.getWorld()).getForcedChunks().contains(context.getWorld().getChunk(context.getBlockPos()).getPos().toLong()))
+        if (SimpleChunkLoader.containsChunks(context.getWorld().getRegistryKey().toString(), context.getWorld().getChunk(context.getBlockPos()).getPos().toLong()))
         {
             context.getPlayer().sendMessage(Text.of("This chunk is already force loaded!"), false);
             return ActionResult.FAIL;

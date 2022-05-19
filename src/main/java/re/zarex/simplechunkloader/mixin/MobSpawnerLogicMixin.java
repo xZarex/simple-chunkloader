@@ -37,7 +37,7 @@ public class MobSpawnerLogicMixin {
     private void isPlayerInRange(World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (world instanceof ServerWorld)
         {
-            if (SimpleChunkLoader.FORCELOADEDCHUNKS.contains(((ServerWorld)world).getChunk(pos).getPos().toLong())) {
+            if (SimpleChunkLoader.containsChunks(((ServerWorld)world).getRegistryKey().getValue().toString(), ((ServerWorld)world).getChunk(pos).getPos().toLong())) {
                 cir.setReturnValue(true);
                 cir.cancel();
             }

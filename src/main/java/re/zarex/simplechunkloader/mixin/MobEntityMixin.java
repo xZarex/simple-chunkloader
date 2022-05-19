@@ -24,7 +24,7 @@ public class MobEntityMixin {
     private void checkDespawn(CallbackInfo cir) {
         MobEntity ent = (MobEntity) (Object) this;
         Chunk chunk = ((ServerWorld)ent.getWorld()).getChunk(ent.getBlockPos());
-        if (SimpleChunkLoader.FORCELOADEDCHUNKS.contains(chunk.getPos().toLong())) {
+        if (SimpleChunkLoader.containsChunks(((ServerWorld)ent.getWorld()).getRegistryKey().getValue().toString(), chunk.getPos().toLong())) {
             cir.cancel();
         }
     }

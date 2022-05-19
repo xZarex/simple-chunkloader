@@ -4,7 +4,7 @@
   "package": "re.zarex.simplechunkloader.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ChunkTicketManagerMixin",
+    "MinecraftServerMixin",
     "ThreadedAnvilChunkStorageMixin",
     "MobSpawnerLogicMixin",
     "MobEntityMixin",

@@ -7,6 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import re.zarex.simplechunkloader.SimpleChunkLoader;
 import re.zarex.simplechunkloader.blocks.ChunkLoader;
 
 import java.util.Objects;
@@ -20,14 +21,15 @@ public class ChunkLoaderEntity extends BlockEntity {
     {
         ServerWorld serverWorld = (ServerWorld)world;   //Objects.requireNonNull(world.getServer()).getWorld(world.getRegistryKey());
         ChunkPos chunkPos = serverWorld.getChunk(pos).getPos();
-        serverWorld.setChunkForced(chunkPos.x, chunkPos.z, true);
-
+        serverWorld.getChunkManager().threadedAnvilChunkStorage.getTicketManager().addTicket(SimpleChunkLoader.TICKET_TYPE, chunkPos, 2, chunkPos);
+        SimpleChunkLoader.addChunk(serverWorld.getRegistryKey().getValue().toString(), chunkPos.toLong());
     }
 
     public void onBreak(World world, BlockPos pos, BlockState state)
     {
         ServerWorld serverWorld = (ServerWorld)world;   //Objects.requireNonNull(world.getServer()).getWorld(world.getRegistryKey());
         ChunkPos chunkPos = serverWorld.getChunk(pos).getPos();
-        serverWorld.setChunkForced(chunkPos.x, chunkPos.z, false);
+        serverWorld.getChunkManager().threadedAnvilChunkStorage.getTicketManager().removeTicket(SimpleChunkLoader.TICKET_TYPE, chunkPos, 2, chunkPos);
+        SimpleChunkLoader.removeChunk(serverWorld.getRegistryKey().getValue().toString(), chunkPos.toLong());
     }
 }
