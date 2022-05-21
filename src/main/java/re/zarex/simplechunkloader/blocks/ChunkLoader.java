@@ -1,9 +1,11 @@
 package re.zarex.simplechunkloader.blocks;
 
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,16 +15,24 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import re.zarex.simplechunkloader.blocks.entities.ChunkLoaderEntity;
+import re.zarex.simplechunkloader.gui.ChunkLoaderBlockScreen;
+import re.zarex.simplechunkloader.gui.ChunkLoaderGuiDescription;
 
 public class ChunkLoader extends BlockWithEntity {
     public static Block BLOCK;
     public static BlockEntityType<ChunkLoaderEntity> ENTITY_TYPE;
+    public static ScreenHandlerType<ChunkLoaderGuiDescription> SCREEN_HANDLER_TYPE;
 
     protected ChunkLoader(Settings settings) {
         super(settings);
@@ -34,12 +44,13 @@ public class ChunkLoader extends BlockWithEntity {
         Registry.register(Registry.BLOCK, ID, BLOCK);
         Registry.register(Registry.ITEM, ID, new ChunkLoaderItem(BLOCK, new FabricItemSettings().group(ItemGroup.MISC)));
         ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, "simplechunkloader:chunkloader_entity", FabricBlockEntityTypeBuilder.create(ChunkLoaderEntity::new, BLOCK).build(null));
-
+        SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerExtended(ID, (syncId, inventory, buf) -> new ChunkLoaderGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY, buf.readBlockPos(), buf.readInt()));
     }
 
 
     public static void RegisterClient() {
         BlockRenderLayerMap.INSTANCE.putBlock(BLOCK, RenderLayer.getCutout());
+        ScreenRegistry.<ChunkLoaderGuiDescription, ChunkLoaderBlockScreen>register(SCREEN_HANDLER_TYPE, (gui, inventory, title) -> new ChunkLoaderBlockScreen(gui, inventory.player, title));
     }
 
 
@@ -85,5 +96,11 @@ public class ChunkLoader extends BlockWithEntity {
         super.onBreak(world, pos, state, player);
     }
 
-
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient())
+            return ActionResult.PASS;
+        player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
+        return ActionResult.SUCCESS;
+    }
 }
