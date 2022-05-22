@@ -44,7 +44,7 @@ public class ChunkLoader extends BlockWithEntity {
 
     public static void Register() {
         WORLDITEM = Registry.register(Registry.ITEM, new Identifier("simplechunkloader", "world"), new Item(new FabricItemSettings()));
-        BLOCK = new ChunkLoader(FabricBlockSettings.of(Material.METAL).strength(4.0f).requiresTool().nonOpaque());
+        BLOCK = new ChunkLoader(FabricBlockSettings.of(Material.METAL).strength(1.0f).requiresTool().nonOpaque());
         Identifier ID = new Identifier("simplechunkloader", "chunkloader");
         Registry.register(Registry.BLOCK, ID, BLOCK);
         Registry.register(Registry.ITEM, ID, new ChunkLoaderItem(BLOCK, new FabricItemSettings().group(ItemGroup.MISC)));

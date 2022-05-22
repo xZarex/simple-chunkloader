@@ -173,14 +173,14 @@ public class SimpleChunkLoader implements ModInitializer {
 				objectinputstream = new ObjectInputStream(streamIn);
 				hashMap.putAll ((HashMap<String, LongArraySet>)objectinputstream.readObject());
 			} catch (Exception e) {
-				LOGGER.info("Could not load config file! "+e.toString());
+				LOGGER.debug("Could not load data file, seems like there aren't any chunkloaders placed");
 			} finally {
 				if(objectinputstream != null){
 					objectinputstream .close();
 				}
 			}
 		} catch (Exception ex2) {
-			LOGGER.info("Could not generate config file! "+ex2.toString());
+			LOGGER.debug("Could not load data file, seems like there aren't any chunkloaders placed");
 		}
 
 
