@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      " D ",
+      "CBC",
+      "AAA"
+    ],
+    "key": {
+      "B": {
+        "item": "minecraft:iron_block"
+      }, 
+      "A": {
+        "item": "minecraft:obsidian"
+      }, 
+      "C": {
+        "item": "minecraft:diamond"
+      },
+      "D": {
+        "item": "minecraft:ender_eye"
+      }                     
+    },
+    "result": {
+      "item": "simplechunkloader:chunkloader",
+      "count": 1
+    }
+  }

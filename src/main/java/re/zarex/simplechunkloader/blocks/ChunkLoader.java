@@ -1,6 +1,7 @@
 package re.zarex.simplechunkloader.blocks;
 
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -13,6 +14,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -26,11 +28,13 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import re.zarex.simplechunkloader.blocks.entities.ChunkLoaderEntity;
+import re.zarex.simplechunkloader.blocks.entities.renderer.ChunkLoaderEntityRenderer;
 import re.zarex.simplechunkloader.gui.ChunkLoaderBlockScreen;
 import re.zarex.simplechunkloader.gui.ChunkLoaderGuiDescription;
 
 public class ChunkLoader extends BlockWithEntity {
     public static Block BLOCK;
+    public static Item WORLDITEM;
     public static BlockEntityType<ChunkLoaderEntity> ENTITY_TYPE;
     public static ScreenHandlerType<ChunkLoaderGuiDescription> SCREEN_HANDLER_TYPE;
 
@@ -39,6 +43,7 @@ public class ChunkLoader extends BlockWithEntity {
     }
 
     public static void Register() {
+        WORLDITEM = Registry.register(Registry.ITEM, new Identifier("simplechunkloader", "world"), new Item(new FabricItemSettings()));
         BLOCK = new ChunkLoader(FabricBlockSettings.of(Material.METAL).strength(4.0f).requiresTool().nonOpaque());
         Identifier ID = new Identifier("simplechunkloader", "chunkloader");
         Registry.register(Registry.BLOCK, ID, BLOCK);
@@ -51,6 +56,7 @@ public class ChunkLoader extends BlockWithEntity {
     public static void RegisterClient() {
         BlockRenderLayerMap.INSTANCE.putBlock(BLOCK, RenderLayer.getCutout());
         ScreenRegistry.<ChunkLoaderGuiDescription, ChunkLoaderBlockScreen>register(SCREEN_HANDLER_TYPE, (gui, inventory, title) -> new ChunkLoaderBlockScreen(gui, inventory.player, title));
+        BlockEntityRendererRegistry.INSTANCE.register(ENTITY_TYPE, ChunkLoaderEntityRenderer::new);
     }
 
 
