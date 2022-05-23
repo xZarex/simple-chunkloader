@@ -27,7 +27,7 @@ import re.zarex.simplechunkloader.SimpleChunkLoader;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 @Mixin(SpawnHelper.class)
 public class SpawnHelperMixin {
@@ -132,4 +132,5 @@ public class SpawnHelperMixin {
             cir.cancel();
         }
     }
+
 }

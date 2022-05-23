@@ -1,7 +1,7 @@
 package re.zarex.simplechunkloader.blocks;
 
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -56,7 +56,7 @@ public class ChunkLoader extends BlockWithEntity {
     public static void RegisterClient() {
         BlockRenderLayerMap.INSTANCE.putBlock(BLOCK, RenderLayer.getCutout());
         ScreenRegistry.<ChunkLoaderGuiDescription, ChunkLoaderBlockScreen>register(SCREEN_HANDLER_TYPE, (gui, inventory, title) -> new ChunkLoaderBlockScreen(gui, inventory.player, title));
-        BlockEntityRendererRegistry.INSTANCE.register(ENTITY_TYPE, ChunkLoaderEntityRenderer::new);
+        BlockEntityRendererRegistry.register(ENTITY_TYPE, ChunkLoaderEntityRenderer::new);
     }
 
 
