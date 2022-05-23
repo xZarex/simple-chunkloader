@@ -103,7 +103,7 @@ public class SimpleChunkLoader implements ModInitializer {
 		}
 
 		SaveHashmap(serverWorld.getServer(), "simplechunkloader.chunks", FORCELOADEDCHUNKS);
-		SaveHashmap(serverWorld.getServer(), "simplechunkloader.chunkloaders", FORCELOADEDCHUNKS);
+		SaveHashmap(serverWorld.getServer(), "simplechunkloader.chunkloaders", chunkloaderToChunks);
 	}
 
 	public static boolean containsChunks(String world, long chunk)
