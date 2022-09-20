@@ -108,14 +108,10 @@ public class SimpleChunkLoader implements ModInitializer {
 
 	public static boolean containsChunks(String world, long chunk)
 	{
-		try {
-			return FORCELOADEDCHUNKS.get(world).contains(chunk);
-		}
-		catch (Exception e)
-		{
-
-		}
-		return false;
+		if (!FORCELOADEDCHUNKS.containsKey(world))
+			return false;
+		
+		return FORCELOADEDCHUNKS.get(world).contains(chunk);
 	}
 
 	public static void SaveHashmap(MinecraftServer server, String filename, HashMap<String, LongArraySet> hashMap)
