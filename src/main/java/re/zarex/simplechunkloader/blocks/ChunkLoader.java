@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
@@ -13,9 +14,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
@@ -24,7 +24,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import re.zarex.simplechunkloader.blocks.entities.ChunkLoaderEntity;
@@ -43,12 +44,16 @@ public class ChunkLoader extends BlockWithEntity {
     }
 
     public static void Register() {
-        WORLDITEM = Registry.register(Registry.ITEM, new Identifier("simplechunkloader", "world"), new Item(new FabricItemSettings()));
+        WORLDITEM = Registry.register(Registries.ITEM, new Identifier("simplechunkloader", "world"), new Item(new FabricItemSettings()));
         BLOCK = new ChunkLoader(FabricBlockSettings.of(Material.METAL).strength(1.0f).requiresTool().nonOpaque());
+        ChunkLoaderItem ITEM = new ChunkLoaderItem(BLOCK, new FabricItemSettings());
         Identifier ID = new Identifier("simplechunkloader", "chunkloader");
-        Registry.register(Registry.BLOCK, ID, BLOCK);
-        Registry.register(Registry.ITEM, ID, new ChunkLoaderItem(BLOCK, new FabricItemSettings().group(ItemGroup.MISC)));
-        ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, "simplechunkloader:chunkloader_entity", FabricBlockEntityTypeBuilder.create(ChunkLoaderEntity::new, BLOCK).build(null));
+        Registry.register(Registries.BLOCK, ID, BLOCK);
+        Registry.register(Registries.ITEM, ID, ITEM);
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(content -> {
+        	content.add(ITEM);
+        });
+        ENTITY_TYPE = Registry.register(Registries.BLOCK_ENTITY_TYPE, "simplechunkloader:chunkloader_entity", FabricBlockEntityTypeBuilder.create(ChunkLoaderEntity::new, BLOCK).build(null));
         SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerExtended(ID, (syncId, inventory, buf) -> new ChunkLoaderGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY, buf.readBlockPos(), buf.readInt()));
     }
 

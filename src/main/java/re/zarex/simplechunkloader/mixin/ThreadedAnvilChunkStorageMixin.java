@@ -1,6 +1,5 @@
 package re.zarex.simplechunkloader.mixin;
 
-import com.mojang.datafixers.DataFixer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
@@ -13,7 +12,6 @@ import net.minecraft.world.chunk.ChunkStatusChangeListener;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -21,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import re.zarex.simplechunkloader.SimpleChunkLoader;
 import re.zarex.simplechunkloader.ThreadedAnvilChunkStorageAccessor;
 
-import java.util.HashMap;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
