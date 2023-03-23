@@ -1,17 +1,12 @@
 package re.zarex.simplechunkloader;
 
 import it.unimi.dsi.fastutil.longs.LongArraySet;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ChunkTicketType;
+import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
@@ -22,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import re.zarex.simplechunkloader.blocks.ChunkLoader;
 import re.zarex.simplechunkloader.blocks.entities.ChunkLoaderEntity;
-import re.zarex.simplechunkloader.gui.ChunkLoaderGuiDescription;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -50,7 +44,8 @@ public class SimpleChunkLoader implements ModInitializer {
 
 		chunkloaderToChunks.get(chunkloader).add(chunk.toLong());
 
-		serverWorld.getChunkManager().threadedAnvilChunkStorage.getTicketManager().addTicket(SimpleChunkLoader.TICKET_TYPE, chunk, 2, chunk);
+		ServerChunkManager manager = serverWorld.getChunkManager();
+		manager.threadedAnvilChunkStorage.getTicketManager().addTicket(SimpleChunkLoader.TICKET_TYPE, chunk, 2, chunk);
 		SaveHashmap(serverWorld.getServer(), "simplechunkloader.chunks", FORCELOADEDCHUNKS);
 		SaveHashmap(serverWorld.getServer(), "simplechunkloader.chunkloaders", chunkloaderToChunks);
 	}
@@ -98,7 +93,8 @@ public class SimpleChunkLoader implements ModInitializer {
 
 		for (long chunk : chunksToRemove) {
 			ChunkPos chunkPos = new ChunkPos(chunk);
-			serverWorld.getChunkManager().threadedAnvilChunkStorage.getTicketManager().removeTicket(SimpleChunkLoader.TICKET_TYPE, chunkPos, 2, chunkPos);
+			ServerChunkManager manager = serverWorld.getChunkManager();
+			manager.threadedAnvilChunkStorage.getTicketManager().removeTicket(SimpleChunkLoader.TICKET_TYPE, chunkPos, 2, chunkPos);
 			FORCELOADEDCHUNKS.get(world).remove(chunk);
 		}
 
@@ -151,12 +147,14 @@ public class SimpleChunkLoader implements ModInitializer {
 			{
 				for (long chunk : FORCELOADEDCHUNKS.get(world.getRegistryKey().getValue().toString())) {
 					ChunkPos pos = new ChunkPos(chunk);
-					world.getChunkManager().threadedAnvilChunkStorage.getTicketManager().addTicket(SimpleChunkLoader.TICKET_TYPE, pos, 2, pos);
+					ServerChunkManager manager = world.getChunkManager();
+					manager.threadedAnvilChunkStorage.getTicketManager().addTicket(SimpleChunkLoader.TICKET_TYPE, pos, 2, pos);
 				}
 			}
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void loadHashmap(MinecraftServer server, String filename, HashMap<String, LongArraySet> hashMap)
 	{
 		Path path = server.getSavePath(WorldSavePath.ROOT);

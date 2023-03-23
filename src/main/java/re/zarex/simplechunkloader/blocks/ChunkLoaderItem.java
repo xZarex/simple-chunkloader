@@ -5,6 +5,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.world.World;
 import re.zarex.simplechunkloader.SimpleChunkLoader;
 
 public class ChunkLoaderItem extends BlockItem {
@@ -14,7 +15,9 @@ public class ChunkLoaderItem extends BlockItem {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (context.getWorld().isClient)
+    	World world = context.getWorld();
+    	
+        if (world.isClient)
             return super.useOnBlock(context);
 
         if (SimpleChunkLoader.containsChunks(context.getWorld().getRegistryKey().toString(), context.getWorld().getChunk(context.getBlockPos()).getPos().toLong()))
