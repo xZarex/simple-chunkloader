@@ -50,7 +50,7 @@ public class ChunkLoader extends BlockWithEntity {
         Identifier ID = new Identifier("simplechunkloader", "chunkloader");
         Registry.register(Registries.BLOCK, ID, BLOCK);
         Registry.register(Registries.ITEM, ID, ITEM);
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(content -> { content.add(ITEM); });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(content -> content.add(ITEM));
         ENTITY_TYPE = Registry.register(Registries.BLOCK_ENTITY_TYPE, "simplechunkloader:chunkloader_entity", FabricBlockEntityTypeBuilder.create(ChunkLoaderEntity::new, BLOCK).build(null));
         SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerExtended(ID, (syncId, inventory, buf) -> new ChunkLoaderGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY, buf.readBlockPos(), buf.readInt()));
     }
@@ -67,7 +67,7 @@ public class ChunkLoader extends BlockWithEntity {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         // With inheriting from BlockWithEntity this defaults to INVISIBLE, so we need to change that!
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+        return BlockRenderType.MODEL;
     }
 
 

@@ -1,6 +1,7 @@
 package re.zarex.simplechunkloader.blocks.entities.renderer;
 
-import net.minecraft.block.entity.BlockEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,15 +13,17 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 import re.zarex.simplechunkloader.blocks.ChunkLoader;
+import re.zarex.simplechunkloader.blocks.entities.ChunkLoaderEntity;
 
-public class ChunkLoaderEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+@Environment(EnvType.CLIENT)
+public class ChunkLoaderEntityRenderer implements BlockEntityRenderer<ChunkLoaderEntity> {
 
     private static ItemStack stack = new ItemStack(ChunkLoader.WORLDITEM, 1);
 
     public ChunkLoaderEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
     @Override
-    public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(ChunkLoaderEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
         double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 8.0;
         matrices.translate(0.5, 1.0 + offset, 0.5);
